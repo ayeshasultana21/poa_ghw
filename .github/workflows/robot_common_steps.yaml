@@ -59,7 +59,7 @@ permissions:
 jobs:
   common_robot_tests_job:
     name: ${{ inputs.workflow_name }}
-    runs-on: gha-runner-set-cph-qa-shared
+    runs-on: [ubuntu-latest]
     env:
       PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
       BROWSERSTACK_BUILD_NAME: ${{ inputs.workflow_description }}
@@ -143,7 +143,7 @@ jobs:
             --variable ENV:${{ inputs.ENV }} \
             --variable DOMAIN:${{ inputs.DOMAIN }} \
             --outputdir ./pabot_results/safari ./tests/test.robot &
-            
+
           safari_pid=$!
 
           wait $chrome_pid
