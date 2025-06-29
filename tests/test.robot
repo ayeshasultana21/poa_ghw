@@ -8,6 +8,7 @@ Library    SeleniumLibrary
 *** Test Cases ***
 Login Page Layout
     [Documentation]    Testing the Percy Google Homepage
+    [Tags]    demo-percy-test
     Setup BrowserStack
     Go To    http://www.google.com
     Maximize Browser Window
