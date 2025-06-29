@@ -17,14 +17,32 @@ ${BROWSERVERSION}           latest
 # Careful when changing the resolution to a new one. Browser Stack has only several resolutions they support
 ${BROWSER_RESOLUTION}       1920x1080    # most popular browser size by our production users according to mode report
 ${BROWSERSTACK_IDENTIFIER}        compatibility_tests
+${COMPATIBILITY_TESTS_WIN_CHROME}       %{COMPATIBILITY_TESTS_WIN_CHROME=False}
+${COMPATIBILITY_TESTS_WIN_FIREFOX}      %{COMPATIBILITY_TESTS_WIN_FIREFOX=False}
+${COMPATIBILITY_TESTS_WIN_EDGE}         %{COMPATIBILITY_TESTS_WIN_EDGE=False}
+${COMPATIBILITY_TESTS_OSX_SAFARI}       %{COMPATIBILITY_TESTS_OSX_SAFARI=False}
 
 
 *** Keywords ***
 Setup BrowserStack     # robocop: off=too-long-keyword,too-many-arguments,too-many-calls-in-keyword
     [Documentation]    Set up BrowserStack browser/session.
-    VAR    ${os}            ${OS_WIN}
-    VAR    ${os_version}    ${OSVERSION_WIN}
-    VAR    ${browser}       ${BROWSER_CHROME}
+    IF    ${COMPATIBILITY_TESTS_WIN_CHROME}
+        VAR    ${os}            ${OS_WIN}
+        VAR    ${os_version}    ${OSVERSION_WIN}
+        VAR    ${browser}       ${BROWSER_CHROME}
+    ELSE IF    ${COMPATIBILITY_TESTS_WIN_FIREFOX}
+        VAR    ${os}            ${OS_WIN}
+        VAR    ${os_version}    ${OSVERSION_WIN}
+        VAR    ${browser}       ${BROWSER_FIREFOX}
+    ELSE IF    ${COMPATIBILITY_TESTS_WIN_EDGE}
+        VAR    ${os}            ${OS_WIN}
+        VAR    ${os_version}    ${OSVERSION_WIN}
+        VAR    ${browser}       ${BROWSER_EDGE}
+    ELSE IF    ${COMPATIBILITY_TESTS_OSX_SAFARI}
+        VAR    ${os}            ${OS_X}
+        VAR    ${os_version}    ${OSVERSION_X}
+        VAR    ${browser}       ${BROWSER_SAFARI}
+    END
 
     VAR    ${browserstackUserName}     %{BROWSERSTACK_USERNAME}
     VAR    ${browserstackAccessKey}    %{BROWSERSTACK_ACCESS_KEY}
