@@ -65,7 +65,7 @@ jobs:
       BROWSERSTACK_BUILD_NAME: ${{ inputs.workflow_description }}
       BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
       BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
-      PERCY_PROJECT: "d1902a5f/ca-visual-regression-automate"
+      PERCY_PROJECT: "d1902a5f/test-automate-e686cf81"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
