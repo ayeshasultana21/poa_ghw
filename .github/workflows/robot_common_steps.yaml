@@ -23,21 +23,6 @@ on:
         type: string
         required: false
         default: 1
-      ENV:
-        description: Environment name
-        type: string
-        required: false
-        default: demo_qa
-      DOMAIN:
-        description: Domain under test
-        type: string
-        required: false
-        default: counterparthealth.io
-      slack_channel:
-        description: Slack channel to send notifications
-        type: string
-        required: false
-        default: NONE
       enable_test_observability:
         description: Enable test metrics to be sent to BrowserStack Test Observability
         type: boolean

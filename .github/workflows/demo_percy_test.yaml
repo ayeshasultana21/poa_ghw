@@ -18,8 +18,5 @@ jobs:
       extra_pabot_options: --variable percy_visual_tests:True --include demo-percy-test
       percy_visual_tests: true
       enable_browser_stack: true
-      DOMAIN: "counterparthealth.io"
-      ENV: "demo_qa"
       parallelism: 3
-      slack_channel: tmp-percy-tests
     secrets: inherit
