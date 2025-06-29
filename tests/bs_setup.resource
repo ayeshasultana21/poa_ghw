@@ -25,7 +25,6 @@ Setup BrowserStack     # robocop: off=too-long-keyword,too-many-arguments,too-ma
     VAR    ${os}            ${OS_WIN}
     VAR    ${os_version}    ${OSVERSION_WIN}
     VAR    ${browser}       ${BROWSER_CHROME}
-    
 
     VAR    ${browserstackUserName}     %{BROWSERSTACK_USERNAME}
     VAR    ${browserstackAccessKey}    %{BROWSERSTACK_ACCESS_KEY}
@@ -44,7 +43,8 @@ Setup BrowserStack     # robocop: off=too-long-keyword,too-many-arguments,too-ma
 
     ${executor}=    Set Variable    https://hub.browserstack.com/wd/hub
     Create Webdriver    Remote    command_executor=${executor}    options=${options}
-    # ${result}=    Run Keyword And Ignore Error    Create Webdriver    Remote    command_executor=${executor}    options=${options}
+    # ${result}=    Run Keyword And Ignore Error
+    #     Create Webdriver    Remote    command_executor=${executor}    options=${options}
     # Run Keyword If    '${result[0]}' == 'FAIL'    Log    WebDriver creation failed: ${result[1]}    level=ERROR
     Set Session Name    ${TEST NAME}
 
@@ -57,7 +57,6 @@ Set Session Name
     ${browserstack_executor}=    Set Variable    browserstack_executor: ${json_executor_object}
     Execute Javascript    ${browserstack_executor}
 
-
 Set Session Status And Close Browser
     [Documentation]    Set session status in BrowserStack dashboard.
     ${reason}=    Get Reason Based On Status
@@ -68,7 +67,6 @@ Set Session Status And Close Browser
     ${browserstack_executor}=    Set Variable    browserstack_executor: ${json_executor_object}
     Execute Javascript    ${browserstack_executor}
     Close Browser
-
 
 Get Reason Based On Status
     [Documentation]    Returns test status message.

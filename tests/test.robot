@@ -1,7 +1,9 @@
 *** Settings ***
+Documentation       A test suite dedicated to the login page.
 Resource            ./bs_setup.resource
 Resource            ./percy.resource
 Library    SeleniumLibrary
+
 
 *** Test Cases ***
 Login Page Layout
@@ -11,6 +13,3 @@ Login Page Layout
     Maximize Browser Window
     RF Percy On Automate Screenshot    Google_Homepage
     [Teardown]    Set Session Status And Close Browser
-
-
-

@@ -9,10 +9,11 @@ Library             ./percy_library.py
 ${PERCY_MAX_PAGE_HEIGHT}                2000
 ${WAIT_TIME_5S}                         5
 
+
 *** Keywords ***
 RF Percy On Automate Screenshot
     [Documentation]    A keyword to Percy on automate screenshot for Percy Visual Testing.
-    [Arguments]    ${screenshot_area}    ${wait_time}=${WAIT_TIME_5S}
+    [Arguments]    ${screenshot_area}
     # Wait Until Page Contains Element    ${locator}    ${wait_time}
 
     ${screenshot_name}=    Set Variable    ${TEST NAME}_${screenshot_area}
