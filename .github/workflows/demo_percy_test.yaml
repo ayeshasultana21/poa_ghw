@@ -1,0 +1,25 @@
+# yamllint disable rule:line-length
+---
+name: demo-percy-test
+description: Percy workflow tests with Demo tenant in the QA environment
+permissions:
+  contents: read
+  pull-requests: write
+on: [push, workflow_call, workflow_dispatch]
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+jobs:
+  demo-percy-test-job:
+    uses: ./.github/workflows/robot_common_steps.yaml
+    with:
+      workflow_description: "Percy workflow tests with Demo tenant in the QA environment"
+      workflow_name: ${{ github.workflow }}
+      extra_pabot_options: --variable percy_visual_tests:True --include demo-percy-test
+      percy_visual_tests: true
+      enable_browser_stack: true
+      DOMAIN: "counterparthealth.io"
+      ENV: "demo_qa"
+      parallelism: 3
+      slack_channel: tmp-percy-tests
+    secrets: inherit
