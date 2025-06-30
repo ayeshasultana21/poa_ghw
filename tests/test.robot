@@ -8,9 +8,8 @@ Library    SeleniumLibrary
 *** Test Cases ***
 Login Page Layout
     [Documentation]    Testing the Percy Google Homepage
-    [Tags]    demo-percy-test
     Setup BrowserStack
     Go To    http://www.google.com
     Maximize Browser Window
     RF Percy On Automate Screenshot    Google_Homepage
-    [Teardown]    Set Session Status And Close Browser
+    [Teardown]    Close Browser

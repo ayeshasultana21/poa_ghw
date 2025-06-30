@@ -1,7 +1,7 @@
 # yamllint disable rule:line-length
 ---
-name: demo-percy-test
-description: Percy workflow tests with Demo tenant in the QA environment
+name: percy-test
+description: Percy workflow tests
 permissions:
   contents: read
   pull-requests: write
@@ -11,12 +11,8 @@ concurrency:
   cancel-in-progress: false
 jobs:
   demo-percy-test-job:
-    uses: ./.github/workflows/robot_common_steps.yaml
+    uses: ./.github/workflows/robot_steps.yaml
     with:
-      workflow_description: "Percy workflow tests with Demo tenant in the QA environment"
+      workflow_description: "Percy workflow tests"
       workflow_name: ${{ github.workflow }}
-      extra_pabot_options: --variable percy_visual_tests:True --include demo-percy-test
-      percy_visual_tests: true
-      enable_browser_stack: true
-      parallelism: 3
     secrets: inherit

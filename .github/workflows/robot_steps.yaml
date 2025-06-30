@@ -1,0 +1,86 @@
+# yamllint disable rule:line-length
+---
+name: robot_steps
+description: Steps for robot test
+on:
+  workflow_call:
+    inputs:
+      workflow_description:
+        description: Description of the workflow
+        type: string
+        required: true
+      workflow_name:
+        description: Name of the workflow
+        type: string
+        required: true
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  common_robot_tests_job:
+    name: ${{ inputs.workflow_name }}
+    runs-on: [ubuntu-latest]
+    env:
+      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+      BROWSERSTACK_BUILD_NAME: ${{ inputs.workflow_description }}
+      BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+      BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+      PERCY_PROJECT: "d1902a5f/test-automate-e686cf81"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install setup-chrome dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libglib2.0-0 libatk1.0-0 libatk-bridge2.0-0 \
+            libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev \
+            libxss-dev xvfb fonts-liberation libu2f-udev \
+            xdg-utils
+
+      - name: Install Chrome and ChromeDriver
+        uses: browser-actions/setup-chrome@v1
+        with:
+          install-dependencies: false
+          install-chromedriver: true
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y python3-pip
+          pip3 install -r requirements.txt
+
+      - name: Setup Browserstack
+        env:
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+        run: |
+          echo "BROWSERSTACK_ACCESS_KEY is set to: $BROWSERSTACK_ACCESS_KEY and ${{ secrets.BROWSERSTACK_ACCESS_KEY }}"
+          wget "https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip"
+          unzip BrowserStackLocal-linux-x64.zip
+          ./BrowserStackLocal --key "${BROWSERSTACK_ACCESS_KEY}" --daemon start --local-identifier poa_ghw --force-local
+          sleep 5  
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: Run Percy tests
+        run: |
+          export HEADLESS=False
+          export PERCY_LOGLEVEL=debug
+          export PERCY_DEBUG=*
+          npm install --save-dev @percy/cli
+          ./node_modules/.bin/percy exec:start --verbose &
+          robot --outputdir ./pabot_results/chrome ./tests/test.robot &
+          ./node_modules/.bin/percy exec:stop
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: >
+            ${{ inputs.workflow_name }}.run${{ github.run_number }}.attempt${{ github.run_attempt }}
+          path: |
+            log.html
+            output.xml
+            report.html
+            .pabotsuitenames
+            pabot_results/
