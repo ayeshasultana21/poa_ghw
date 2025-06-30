@@ -17,7 +17,9 @@ ${COMPATIBILITY_TESTS_WIN_CHROME}       %{COMPATIBILITY_TESTS_WIN_CHROME=False}
 ${COMPATIBILITY_TESTS_WIN_FIREFOX}      %{COMPATIBILITY_TESTS_WIN_FIREFOX=False}
 ${COMPATIBILITY_TESTS_WIN_EDGE}         %{COMPATIBILITY_TESTS_WIN_EDGE=False}
 ${COMPATIBILITY_TESTS_OSX_SAFARI}       %{COMPATIBILITY_TESTS_OSX_SAFARI=False}
-
+${BROWSER_FIREFOX}          Firefox
+${BROWSER_EDGE}             Edge
+${BROWSER_SAFARI}           Safari
 *** Keywords ***
 Setup BrowserStack     # robocop: off=too-long-keyword,too-many-arguments,too-many-calls-in-keyword
     [Documentation]    Set up BrowserStack browser/session.
