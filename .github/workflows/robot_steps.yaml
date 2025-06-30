@@ -69,8 +69,7 @@ jobs:
           export PERCY_LOGLEVEL=debug
           export PERCY_DEBUG=*
           npm install --save-dev @percy/cli
-          ./node_modules/.bin/percy exec:start --verbose &
-          robot --outputdir ./pabot_results/chrome ./tests/test.robot &
+          ./node_modules/.bin/percy exec -- robot --outputdir ./pabot_results/chrome ./tests/test.robot &
           ./node_modules/.bin/percy exec:stop
       - name: Upload artifacts
         if: always()
