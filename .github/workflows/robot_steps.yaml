@@ -69,7 +69,32 @@ jobs:
           export PERCY_LOGLEVEL=debug
           export PERCY_DEBUG=*
           npm install --save-dev @percy/cli
-          ./node_modules/.bin/percy exec -- robot --outputdir ./pabot_results/chrome ./tests/test.robot
+          ./node_modules/.bin/percy exec:start &
+
+          set +e
+          robot --variable compatibility_tests_win_chrome:True --outputdir ./pabot_results/chrome ./tests/test.robot &
+          chrome_pid=$!
+
+          robot --variable compatibility_tests_win_firefox:True --outputdir  ./pabot_results/firefox ./tests/test.robot &
+          firefox_pid=$!
+
+          robot --variable compatibility_tests_osx_safari:True --outputdir  ./pabot_results/safari ./tests/test.robot &
+          safari_pid=$!
+
+          wait $chrome_pid
+          chrome_exit_code=$?
+          wait $firefox_pid
+          firefox_exit_code=$?
+          wait $safari_pid
+          safari_exit_code=$?
+          set -e
+
+          echo "Exit codes: chrome=$chrome_exit_code  firefox=$firefox_exit_code safari=$safari_exit_code"
+          if [[ $chrome_exit_code -ne 0 || $firefox_exit_code -ne 0 || $safari_exit_code -ne 0 ]]; then
+            echo "One or more tests failed. Failing the build."
+            echo "chrome=$chrome_exit_code firefox=$firefox_exit_code safari=$safari_exit_code"
+          fi
+
           ./node_modules/.bin/percy exec:stop
       - name: Upload artifacts
         if: always()
