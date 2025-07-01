@@ -55,11 +55,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Robocop
-        run: |
-          pip3 install robotframework-robocop==5.2.0
-          python3 -m robocop -t W .
-
       - name: Install setup-chrome dependencies
         run: |
           sudo apt-get update
@@ -103,32 +98,17 @@ jobs:
           export HEADLESS=False
           export PERCY_LOGLEVEL=debug
           export PERCY_DEBUG=*
-          pwd
           npm install --save-dev @percy/cli
-          ./node_modules/.bin/percy exec:start --verbose &
-          set +e
-          pabot --processes ${{ inputs.parallelism }} ${{ inputs.extra_pabot_options }} \
-            --variable compatibility_tests_win_chrome:True \
-            --variable ENV:${{ inputs.ENV }} \
-            --variable DOMAIN:${{ inputs.DOMAIN }} \
-            --outputdir ./pabot_results/chrome ./tests/test.robot &
+          ./node_modules/.bin/percy exec:start &
 
+          set +e
+          pabot --processes ${{ inputs.parallelism }} ${{ inputs.extra_pabot_options }} --variable compatibility_tests_win_chrome:True --variable ENV:${{ inputs.ENV }} --variable DOMAIN:${{ inputs.DOMAIN }} --outputdir ./pabot_results/chrome ./tests/test.robot &
           chrome_pid=$!
 
-          pabot --processes ${{ inputs.parallelism }} ${{ inputs.extra_pabot_options }} \
-            --variable compatibility_tests_win_firefox:True \
-            --variable ENV:${{ inputs.ENV }} \
-            --variable DOMAIN:${{ inputs.DOMAIN }} \
-            --outputdir ./pabot_results/firefox ./tests/test.robot &
-
+          pabot --processes ${{ inputs.parallelism }} ${{ inputs.extra_pabot_options }} --variable compatibility_tests_win_firefox:True --variable ENV:${{ inputs.ENV }} --variable DOMAIN:${{ inputs.DOMAIN }} --outputdir ./pabot_results/firefox ./tests/test.robot &
           firefox_pid=$!
 
-          pabot --processes ${{ inputs.parallelism }} ${{ inputs.extra_pabot_options }} \
-            --variable compatibility_tests_osx_safari:True \
-            --variable ENV:${{ inputs.ENV }} \
-            --variable DOMAIN:${{ inputs.DOMAIN }} \
-            --outputdir ./pabot_results/safari ./tests/test.robot &
-
+          pabot --processes ${{ inputs.parallelism }} ${{ inputs.extra_pabot_options }} --variable compatibility_tests_osx_safari:True --variable ENV:${{ inputs.ENV }} --variable DOMAIN:${{ inputs.DOMAIN }} --outputdir ./pabot_results/safari ./tests/test.robot &
           safari_pid=$!
 
           wait $chrome_pid
@@ -152,18 +132,6 @@ jobs:
             --project "$PERCY_PROJECT" \
             --commit "${{ github.sha }}" \
             --fail-on-changes
-      - name: Run Robot tests
-        if: ${{ !inputs.percy_visual_tests }}
-        run: |
-          export HEADLESS=True
-          github_branch=$(git rev-parse --abbrev-ref HEAD)
-          cmd="pabot --processes ${{ inputs.parallelism }} ${{ inputs.extra_pabot_options }} --variable DOMAIN:${{ inputs.DOMAIN }} ."
-          # Only send test metrics if Test Observability is enabled and GitHub branch is master
-          if ${{ inputs.enable_test_observability }} && [ "$github_branch" = "master" ]; then
-            eval "browserstack-sdk $cmd"
-          else
-            eval "$cmd"
-          fi
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4

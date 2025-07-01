@@ -10,9 +10,6 @@ ${OS_X}                     OS X
 ${OSVERSION_WIN}            10
 ${OSVERSION_X}              Ventura
 ${BROWSER_CHROME}           Chrome
-${BROWSER_FIREFOX}          Firefox
-${BROWSER_EDGE}             Edge
-${BROWSER_SAFARI}           Safari
 ${BROWSERVERSION}           latest
 # Careful when changing the resolution to a new one. Browser Stack has only several resolutions they support
 ${BROWSER_RESOLUTION}       1920x1080    # most popular browser size by our production users according to mode report
@@ -21,8 +18,9 @@ ${COMPATIBILITY_TESTS_WIN_CHROME}       %{COMPATIBILITY_TESTS_WIN_CHROME=False}
 ${COMPATIBILITY_TESTS_WIN_FIREFOX}      %{COMPATIBILITY_TESTS_WIN_FIREFOX=False}
 ${COMPATIBILITY_TESTS_WIN_EDGE}         %{COMPATIBILITY_TESTS_WIN_EDGE=False}
 ${COMPATIBILITY_TESTS_OSX_SAFARI}       %{COMPATIBILITY_TESTS_OSX_SAFARI=False}
-
-
+${BROWSER_FIREFOX}          Firefox
+${BROWSER_EDGE}             Edge
+${BROWSER_SAFARI}           Safari
 *** Keywords ***
 Setup BrowserStack     # robocop: off=too-long-keyword,too-many-arguments,too-many-calls-in-keyword
     [Documentation]    Set up BrowserStack browser/session.
@@ -43,7 +41,6 @@ Setup BrowserStack     # robocop: off=too-long-keyword,too-many-arguments,too-ma
         VAR    ${os_version}    ${OSVERSION_X}
         VAR    ${browser}       ${BROWSER_SAFARI}
     END
-
     VAR    ${browserstackUserName}     %{BROWSERSTACK_USERNAME}
     VAR    ${browserstackAccessKey}    %{BROWSERSTACK_ACCESS_KEY}
     VAR    ${buildName}                %{BROWSERSTACK_BUILD_NAME}

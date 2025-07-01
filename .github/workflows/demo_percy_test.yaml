@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   demo-percy-test-job:
-    uses: ./.github/workflows/robot_common_steps.yaml
+    uses: ./.github/workflows/robot_steps.yaml
     with:
       workflow_description: "Percy workflow tests with Demo tenant in the QA environment"
       workflow_name: ${{ github.workflow }}
