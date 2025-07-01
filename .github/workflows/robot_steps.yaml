@@ -72,13 +72,13 @@ jobs:
           ./node_modules/.bin/percy exec:start &
 
           set +e
-          pabot --processes --variable compatibility_tests_win_chrome:True --outputdir ./pabot_results/chrome ./tests/test.robot &
+          pabot --processes 1 --variable compatibility_tests_win_chrome:True --outputdir ./pabot_results/chrome ./tests/test.robot &
           chrome_pid=$!
 
-          pabot --processes --variable compatibility_tests_win_firefox:True --outputdir  ./pabot_results/firefox ./tests/test.robot &
+          pabot --processes 1 --variable compatibility_tests_win_firefox:True --outputdir  ./pabot_results/firefox ./tests/test.robot &
           firefox_pid=$!
 
-          pabot --processess compatibility_tests_osx_safari:True --outputdir  ./pabot_results/safari ./tests/test.robot &
+          pabot --processess 1 --variable compatibility_tests_osx_safari:True --outputdir  ./pabot_results/safari ./tests/test.robot &
           safari_pid=$!
 
           wait $chrome_pid
