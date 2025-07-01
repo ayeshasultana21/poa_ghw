@@ -27,7 +27,7 @@ on:
         description: Enable test metrics to be sent to BrowserStack Test Observability
         type: boolean
         required: false
-        default: true
+        default: false
       enable_browser_stack:
         description: Boolean to enable to browserstack
         type: boolean
