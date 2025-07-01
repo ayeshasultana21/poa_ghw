@@ -93,7 +93,6 @@ jobs:
         with:
           node-version: '20'
       - name: Run Percy tests
-        if: ${{ inputs.percy_visual_tests }}
         run: |
           export HEADLESS=False
           export PERCY_LOGLEVEL=debug
@@ -102,13 +101,13 @@ jobs:
           ./node_modules/.bin/percy exec:start &
 
           set +e
-          pabot --processes ${{ inputs.parallelism }} ${{ inputs.extra_pabot_options }} --variable compatibility_tests_win_chrome:True --variable ENV:${{ inputs.ENV }} --variable DOMAIN:${{ inputs.DOMAIN }} --outputdir ./pabot_results/chrome ./tests/test.robot &
+          pabot --processes 1 ${{ inputs.extra_pabot_options }} --variable compatibility_tests_win_chrome:True --variable ENV:${{ inputs.ENV }} --variable DOMAIN:${{ inputs.DOMAIN }} --outputdir ./pabot_results/chrome ./tests/test.robot &
           chrome_pid=$!
 
-          pabot --processes ${{ inputs.parallelism }} ${{ inputs.extra_pabot_options }} --variable compatibility_tests_win_firefox:True --variable ENV:${{ inputs.ENV }} --variable DOMAIN:${{ inputs.DOMAIN }} --outputdir ./pabot_results/firefox ./tests/test.robot &
+          pabot --processes 1 ${{ inputs.extra_pabot_options }} --variable compatibility_tests_win_firefox:True --variable ENV:${{ inputs.ENV }} --variable DOMAIN:${{ inputs.DOMAIN }} --outputdir ./pabot_results/firefox ./tests/test.robot &
           firefox_pid=$!
 
-          pabot --processes ${{ inputs.parallelism }} ${{ inputs.extra_pabot_options }} --variable compatibility_tests_osx_safari:True --variable ENV:${{ inputs.ENV }} --variable DOMAIN:${{ inputs.DOMAIN }} --outputdir ./pabot_results/safari ./tests/test.robot &
+          pabot --processes 1 ${{ inputs.extra_pabot_options }} --variable compatibility_tests_osx_safari:True --variable ENV:${{ inputs.ENV }} --variable DOMAIN:${{ inputs.DOMAIN }} --outputdir ./pabot_results/safari ./tests/test.robot &
           safari_pid=$!
 
           wait $chrome_pid
@@ -126,12 +125,6 @@ jobs:
           fi
 
           ./node_modules/.bin/percy exec:stop
-
-          echo "CommitID: ${{ github.sha }}"
-          ./node_modules/.bin/percy build:wait \
-            --project "$PERCY_PROJECT" \
-            --commit "${{ github.sha }}" \
-            --fail-on-changes
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
